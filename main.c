@@ -8,6 +8,10 @@
 #include "waveshape_wav.h"
 #include "config.h"
 
+#define SPEED_INCREMENT 0.05f
+#define MAX_SPEED 	5
+#define MIN_SPEED 	0.25f
+
 static struct oscillator_s *osc1 = NULL;
 
 static unsigned char assert_pa_error(PaError err, const char *msg)
@@ -47,10 +51,16 @@ int main(int argc, char **argv)
 		switch(c)
 		{
 			case '[':
-				osc1->speed -= 0.05f;
+				if (osc1->speed - SPEED_INCREMENT <= MIN_SPEED)
+					break;
+
+				osc1->speed -= SPEED_INCREMENT;
 				break;
 			case ']':
-				osc1->speed += 0.05f;
+				if (osc1->speed + SPEED_INCREMENT > MAX_SPEED)
+					break;
+
+				osc1->speed += SPEED_INCREMENT;
 				break;
 			case 'q':
 				goto end;
